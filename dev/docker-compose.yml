@@ -1,0 +1,22 @@
+version: '2'
+
+services:
+  app:
+    container_name: docker-rails-sample
+    build: .
+    volumes_from:
+      - volume
+    ports:
+      - 3000:3000
+    command: tail -f /dev/null
+
+  volume:
+    container_name: docker-rails-sample-volume
+    image: busybox
+    volumes:
+      - ..:/app
+      - /app/tmp
+      - /app/log
+      - /app/vendor
+      - /app/node_modules
+    command: tail -f /dev/null
