@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -eu
+set -o pipefail
+
+cd "$(dirname $0)"
+
+exec_cmd() {
+  docker-compose up -d 2> /dev/null
+  docker-compose exec app "$@"
+}
+
+case "${1:-}" in
+  rails)
+    case "${2:-}" in
+      s|server) exec_cmd bundle exec rails s -p 3000 --bind=0.0.0.0 ;;
+      *) exec_cmd bundle exec rails "$@" ;;
+    esac ;;
+  rspec|rake) exec_cmd bundle exec "$@" ;;
+  *)          exec_cmd "$@" ;;
+esac
